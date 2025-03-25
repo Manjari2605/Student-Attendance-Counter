@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Student Attendance Counter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .form-box {
+            background-color: #e3f2fd;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-control {
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="container mt-5">
+        <h2 class="text-center"> Student Attendance Counter</h2>
+         <div class="form-box">
+        <label for="name"><b>Enter Student Name:</b></label>
+        <input type="text" id="name" class="form-control mb-3" placeholder="Enter Name">
+        <div class="row" id="subjectContainer"></div>
+        <button id="addSubject" class="btn btn-secondary mt-3" onclick="addSubject()"><b>+</b>Add Subject</button>
+        <center><button class="btn btn-success mt-3 w-75" onclick="calculateAttendance()">Calculate Attendance</button></center>
+        <h3 class="text-center mt-3">Attendance: <span id="attendance"></span>%</h3>
+    </div>
+    <script>
+        var subjectCount = 0;  
+    
+        function addSubject(subject = "", attended = "", total = "") {
+            if (subjectCount >= 6) return;  
+            subjectCount++;
+            var newSubject = `<div class="col-md-12 mb-2">
+                <label>Subject ${subjectCount} Name:</label>
+                <input type="text" class="form-control subject-name" value="${subject}" placeholder="Enter Subject">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Classes Attended:</label>
+                        <input type="number" class="form-control attended" value="${attended}" min="0">
+                    </div>
+                    <div class="col-6">
+                        <label>Total Classes:</label>
+                        <input type="number" class="form-control total" value="${total}" min="1">
+                    </div>
+                </div>
+            </div>`;
+
+            document.getElementById("subjectContainer").innerHTML += newSubject;
+            if (subjectCount >= 6) document.getElementById("addSubject").style.display = "none";
+        }
+    
+        function calculateAttendance() {
+            var totalClasses = 0, attendedClasses = 0;
+            var attendedInputs = document.getElementsByClassName("attended");
+            var totalInputs = document.getElementsByClassName("total");
+    
+            for (var i = 0; i < attendedInputs.length; i++) {
+                var attended = parseInt(attendedInputs[i].value) || 0;  
+                var total = parseInt(totalInputs[i].value) || 1; 
+    
+                if (total > 0 && attended >= 0 && attended <= total) {  
+                    attendedClasses += attended;
+                    totalClasses += total;
+                }
+            }
+    
+            if (totalClasses > 0) {
+                document.getElementById("attendance").innerText = ((attendedClasses / totalClasses) * 100).toFixed(2);
+            } else {
+                document.getElementById("attendance").innerText = "-";
+                alert("Enter valid class details!");
+            }
+        }
+        addSubject();  
+    </script>    
+</body>
+</html>
